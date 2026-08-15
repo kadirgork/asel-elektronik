@@ -1,0 +1,17 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+---
+
+<BaseLayout title="Hakkımızda | Asel Elektronik" description="Asel Elektronik'in elektrik ve elektronik ürünlerinde anlaşılır, güvenilir ve proje odaklı yaklaşımını keşfedin.">
+  <SiteHeader />
+  <main id="main-content">
+    <section class="page-hero page-hero--dark"><div class="container page-hero-grid"><div><Breadcrumbs items={[{ label: "Hakkımızda" }]} /><span class="eyebrow">Asel Elektronik</span><h1>Elektriği<br /><em>anlaşılır kıl.</em></h1><p>Doğru ürünü bulmayı, teknik kararı sadeleştirmeyi ve projen için güvenli bir başlangıç yapmayı önemsiyoruz.</p></div><div class="page-hero-stamp"><span>AE</span><small>Elektrik<br />elektronik<br />çözüm</small></div></div></section>
+    <section class="section section--white about-intro"><div class="container about-intro-grid"><div><span class="eyebrow">Yaklaşımımız</span><h2>Sadece ürün satmak değil, doğru kararı kolaylaştırmak.</h2></div><div class="about-copy"><p>Elektrik ve elektronik dünyasında ürün sayısı arttıkça doğru seçimi yapmak zorlaşabiliyor. Asel Elektronik, bu süreci daha anlaşılır hale getiren bir ürün kataloğu ve proje iletişimi sunmak için tasarlandı.</p><p>Aydınlatmadan kablolamaya, güvenlikten güç ürünlerine kadar farklı ihtiyaçları tek bir çatı altında topluyor; ürün detaylarını kullanım alanı ve teknik gereksinimle birlikte ele alıyoruz.</p></div></div></section>
+    <section class="section about-values"><div class="container"><div class="section-heading"><div><span class="eyebrow">Değerlerimiz</span><h2>Her temasta aynı üç ilke.</h2></div><p>Marka dili, ürün seçimi ve proje iletişiminde sade, güvenilir ve işlevsel bir deneyim.</p></div><div class="value-grid"><article><span>01</span><h3>Netlik</h3><p>Teknik bilgiyi anlaşılır bir dile çevirir, karar vermeyi kolaylaştırırız.</p></article><article><span>02</span><h3>Güven</h3><p>Ürün bilgisini, uygulama koşullarını ve teyit edilmesi gereken noktaları açıkça paylaşırız.</p></article><article><span>03</span><h3>Uyum</h3><p>Günlük kullanımdan proje tedarikine kadar ihtiyaca göre esnek bir yol kurarız.</p></article></div></div></section>
+    <section class="section dark-section"><div class="container about-cta"><div><span class="eyebrow">Birlikte çalışalım</span><h2>İhtiyacını anlat, doğru çözümü birlikte kuralım.</h2></div><a class="button button--lime" href="/iletisim/">İletişime geç <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

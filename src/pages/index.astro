@@ -1,41 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { categories } from "../data/catalog";
 import { products } from "../data/products";
-
-const categories = [
-  {
-    title: "Aydınlatma",
-    description: "LED, dekoratif, dış mekân ve endüstriyel aydınlatma.",
-  },
-  {
-    title: "Anahtar & priz",
-    description: "Modern mekanlar için modüler anahtar, priz ve aksesuarlar.",
-  },
-  {
-    title: "Kablolama",
-    description: "Enerji, zayıf akım, data ve solar kablo çözümleri.",
-  },
-  {
-    title: "Diafon & güvenlik",
-    description: "Kamera, yangın, görüntülü ve sesli diafon sistemleri.",
-  },
-  {
-    title: "Otomasyon & şalt",
-    description: "Sigorta, kontaktör, röle ve pano ekipmanları.",
-  },
-  {
-    title: "Isıtma & soğutma",
-    description: "Fan, ısıtıcı ve havalandırma ürünleri.",
-  },
-  {
-    title: "Güç ürünleri",
-    description: "Şarj istasyonu, UPS ve güç kaynağı seçenekleri.",
-  },
-  {
-    title: "Teklif & proje",
-    description: "İhtiyaca göre ürün seçimi ve proje bazlı tedarik.",
-  },
-];
 
 const featuredProducts = products.slice(0, 8);
 const itemListData = {
@@ -51,6 +20,7 @@ const itemListData = {
       brand: { "@type": "Brand", name: product.brand },
       category: product.category,
       image: new URL(product.image, Astro.site ?? "https://www.asel-elektronik.com").toString(),
+      url: new URL(`/urunler/${product.slug}/`, Astro.site ?? "https://www.asel-elektronik.com").toString(),
     },
   })),
 };
@@ -58,49 +28,13 @@ const itemListData = {
 
 <BaseLayout
   title="Asel Elektronik | Elektrik ve elektronik çözümleri"
-  description="Aydınlatma, kablolama, güvenlik, otomasyon ve güç ürünlerinde doğru çözüm. Asel Elektronik ile projeniz için güvenilir tedarik."
+  description="Aydınlatma, kablolama, güvenlik, otomasyon ve güç ürünlerinde doğru çözüm. Asel Elektronik ile projen için güvenilir tedarik."
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListData)} />
   </Fragment>
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <p>Elektrik ve elektronik çözümlerinde doğru ürün, doğru yönlendirme.</p>
-      <div class="topbar-links">
-        <a href="#cozumler">Çözümler</a>
-        <a href="#iletisim">Teklif iste</a>
-      </div>
-    </div>
-  </div>
-
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="/" aria-label="Asel Elektronik ana sayfa">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>ASEL <small>ELEKTRONİK</small></span>
-      </a>
-
-      <nav class="nav-links" aria-label="Ana menü">
-        <a href="#cozumler">Çözümler</a>
-        <a href="#urunler">Ürünler</a>
-        <a href="#yaklasim">Yaklaşımımız</a>
-        <a href="#iletisim">İletişim</a>
-      </nav>
-
-      <a class="button" href="#iletisim">Proje konuşalım <span aria-hidden="true">↗</span></a>
-
-      <details class="mobile-nav">
-        <summary aria-label="Mobil menüyü aç">Menü <span aria-hidden="true">+</span></summary>
-        <nav class="mobile-nav-panel" aria-label="Mobil menü">
-          <a href="#cozumler">Çözümler</a>
-          <a href="#urunler">Ürünler</a>
-          <a href="#yaklasim">Yaklaşımımız</a>
-          <a href="#iletisim">İletişim</a>
-        </nav>
-      </details>
-    </div>
-  </header>
+  <SiteHeader />
 
   <main id="main-content">
     <section class="hero" aria-labelledby="hero-title">
@@ -109,12 +43,11 @@ const itemListData = {
           <span class="eyebrow">Elektrik & elektronik çözümleri</span>
           <h1 id="hero-title">Doğru ürün.<br /><em>Kesintisiz güç.</em></h1>
           <p class="hero-lead">
-            Asel Elektronik, yaşam alanlarından endüstriyel projelere kadar ihtiyaç duyduğunuz
-            elektrik ve elektronik ürünlerini anlaşılır, hızlı ve güvenilir bir deneyimle sunar.
+            Asel Elektronik, yaşam alanlarından endüstriyel projelere kadar ihtiyaç duyduğun elektrik ve elektronik ürünlerini anlaşılır, hızlı ve güvenilir bir deneyimle sunar.
           </p>
           <div class="hero-actions">
-            <a class="button button--lime" href="#urunler">Ürünleri keşfet <span aria-hidden="true">↓</span></a>
-            <a class="button" href="#iletisim">Teklif al <span aria-hidden="true">↗</span></a>
+            <a class="button button--lime" href="/urunler/">Ürünleri keşfet <span aria-hidden="true">↓</span></a>
+            <a class="button" href="/iletisim/">Teklif al <span aria-hidden="true">↗</span></a>
           </div>
           <p class="hero-note"><span aria-hidden="true"></span><strong>Proje odaklı tedarik</strong> · İhtiyacına uygun seçim</p>
         </div>
@@ -152,7 +85,7 @@ const itemListData = {
 
         <div class="category-grid">
           {categories.map((category, index) => (
-            <a class="category-card" href="#urunler">
+            <a class="category-card" href={`/kategoriler/${category.slug}/`}>
               <span class="category-index">{String(index + 1).padStart(2, "0")}</span>
               <h3>{category.title}</h3>
               <p>{category.description}</p>
@@ -170,32 +103,13 @@ const itemListData = {
             <span class="eyebrow">Seçili ürünler</span>
             <h2 id="products-title">İhtiyaç duyduğun ürün, doğru yerde.</h2>
           </div>
-          <p>Kaynak katalogdaki ürün gruplarından seçilmiş örnekleri, Asel Elektronik deneyimi içinde keşfet.</p>
+          <p>Ürün detaylarını, teknik özellikleri ve kullanım alanlarını inceleyerek daha bilinçli seçim yap.</p>
         </div>
 
         <div class="product-grid">
-          {featuredProducts.map((product, index) => (
-            <article class="product-card">
-              <div class="product-image">
-                <span class="product-tag">{product.category}</span>
-                <img
-                  src={product.image}
-                  alt={`${product.brand} ${product.title}`}
-                  width="640"
-                  height="640"
-                  loading={index < 2 ? "eager" : "lazy"}
-                  decoding="async"
-                />
-              </div>
-              <div class="product-copy">
-                <div class="product-meta"><span>{product.brand}</span><span>{product.category}</span></div>
-                <h3>{product.title}</h3>
-                <p>{product.highlight}</p>
-                <a class="product-link" href="#iletisim">Teklif için incele <span aria-hidden="true">→</span></a>
-              </div>
-            </article>
-          ))}
+          {featuredProducts.map((product, index) => <ProductCard product={product} eager={index < 2} />)}
         </div>
+        <div class="section-action"><a class="button" href="/urunler/">Tüm ürünleri gör <span aria-hidden="true">↗</span></a></div>
       </div>
     </section>
 
@@ -224,28 +138,11 @@ const itemListData = {
             <span class="eyebrow">Bir sonraki adım</span>
             <h2 id="contact-title">Projen için doğru bağlantıyı birlikte kuralım.</h2>
           </div>
-          <a class="button" href="#urunler">Ürünleri incele <span aria-hidden="true">↗</span></a>
+          <a class="button" href="/iletisim/">İletişime geç <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-top">
-        <div>
-          <a class="brand" href="/" aria-label="Asel Elektronik ana sayfa">
-            <span class="brand-mark" aria-hidden="true"></span>
-            <span>ASEL <small>ELEKTRONİK</small></span>
-          </a>
-          <p class="footer-brand-copy">Aydınlatmadan güç ürünlerine, elektrik ve elektronik ihtiyaçların için güvenilir çözüm ortağın.</p>
-        </div>
-        <div class="footer-links">
-          <div><h3>Keşfet</h3><a href="#cozumler">Çözümler</a><a href="#urunler">Ürünler</a><a href="#yaklasim">Yaklaşımımız</a></div>
-          <div><h3>Başla</h3><a href="#iletisim">Teklif iste</a><a href="#urunler">Katalog</a><a href="#main-content">Yukarı çık ↑</a></div>
-        </div>
-      </div>
-      <div class="footer-bottom"><p>© 2026 Asel Elektronik. Tüm hakları saklıdır.</p><p>Hızlı, sade ve SEO odaklı Astro altyapısı.</p></div>
-    </div>
-  </footer>
+  <SiteFooter />
 </BaseLayout>

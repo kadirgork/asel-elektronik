@@ -1,0 +1,43 @@
+---
+import BrandMark from "./BrandMark.astro";
+
+const navItems = [
+  { label: "Çözümler", href: "/kategoriler/" },
+  { label: "Ürünler", href: "/urunler/" },
+  { label: "Hakkımızda", href: "/hakkimizda/" },
+  { label: "İletişim", href: "/iletisim/" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <p>Elektrik ve elektronik çözümlerinde doğru ürün, doğru yönlendirme.</p>
+    <div class="topbar-links">
+      <a href="/kategoriler/">Çözümler</a>
+      <a href="/iletisim/">Teklif iste</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container nav">
+    <BrandMark />
+
+    <nav class="nav-links" aria-label="Ana menü">
+      {navItems.map((item) => (
+        <a class={currentPath.startsWith(item.href) ? "active" : ""} href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+
+    <a class="button" href="/iletisim/">Proje konuşalım <span aria-hidden="true">↗</span></a>
+
+    <details class="mobile-nav">
+      <summary aria-label="Mobil menüyü aç">Menü <span aria-hidden="true">+</span></summary>
+      <nav class="mobile-nav-panel" aria-label="Mobil menü">
+        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+    </details>
+  </div>
+</header>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+---
+
+<BaseLayout title="Sayfa bulunamadı | Asel Elektronik" description="Aradığınız Asel Elektronik sayfası bulunamadı.">
+  <SiteHeader />
+  <main id="main-content" class="not-found"><div class="container"><span class="not-found-code">404</span><span class="eyebrow">Bağlantı kesildi</span><h1>Aradığın sayfa burada değil.</h1><p>Ürün kataloğuna dönerek aradığın çözümü keşfedebilirsin.</p><div class="hero-actions"><a class="button button--lime" href="/">Ana sayfaya dön</a><a class="button" href="/urunler/">Ürünlere git</a></div></div></main>
+  <SiteFooter />
+</BaseLayout>

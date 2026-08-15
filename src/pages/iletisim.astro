@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+---
+
+<BaseLayout title="İletişim ve teklif | Asel Elektronik" description="Asel Elektronik ürün ve proje teklifleri için iletişim sayfası. İhtiyacınızı paylaşın, doğru ürün seçimini birlikte yapalım.">
+  <SiteHeader />
+  <main id="main-content">
+    <section class="page-hero page-hero--dark"><div class="container page-hero-grid"><div><Breadcrumbs items={[{ label: "İletişim" }]} /><span class="eyebrow">Teklif ve danışmanlık</span><h1>Projen için<br /><em>buradayız.</em></h1><p>İhtiyacını, kullanım alanını ve zaman planını paylaş. Doğru ürün grubu ve tedarik adımlarını birlikte netleştirelim.</p></div><div class="page-hero-stat"><strong>01</strong><span>net ihtiyaç<br />ile başlayalım</span></div></div></section>
+    <section class="section section--white"><div class="container contact-grid"><div class="contact-intro"><span class="eyebrow">İletişim</span><h2>İhtiyacını anlat.</h2><p>Ürün seçimi, proje bazlı tedarik veya teknik danışmanlık için aşağıdaki formu kullanabilirsin. Telefon, WhatsApp ve e-posta bilgileri müşteri onayıyla bu alana eklenecektir.</p><div class="contact-points"><div><span class="contact-point-icon">↗</span><div><strong>Ürün danışmanlığı</strong><p>Kategori ve model seçimini birlikte değerlendirelim.</p></div></div><div><span class="contact-point-icon">⌁</span><div><strong>Proje teklifi</strong><p>Metraj, kullanım alanı ve teslim planını paylaş.</p></div></div><div><span class="contact-point-icon">✓</span><div><strong>Net yönlendirme</strong><p>Teknik detayları anlaşılır bir sonraki adıma dönüştürelim.</p></div></div></div></div><form class="contact-form" id="iletisim-formu" action="#iletisim-formu" method="post"><div class="form-heading"><span class="eyebrow">Talep formu</span><h2>Bize yazın.</h2></div><label for="name">Ad soyad<input id="name" name="name" type="text" autocomplete="name" required /></label><label for="email">E-posta<input id="email" name="email" type="email" autocomplete="email" required /></label><label for="subject">Konu<select id="subject" name="subject"><option>Ürün danışmanlığı</option><option>Proje teklifi</option><option>Teknik bilgi</option><option>Diğer</option></select></label><label for="message">Mesajınız<textarea id="message" name="message" rows="5" required></textarea></label><button class="button button--lime" type="submit">Talep oluştur <span aria-hidden="true">↗</span></button><p class="form-note">Form gönderim servisi, müşteri e-posta/CRM bilgileri netleştiğinde bağlanacaktır.</p></form></div></section>
+    <section class="section contact-bottom"><div class="container"><div class="quote-card"><div><span class="eyebrow">Hazır mısın?</span><h2>Ürün kataloğuna geri dön ve ihtiyacını keşfet.</h2></div><a class="button" href="/urunler/">Ürünleri incele <span aria-hidden="true">↗</span></a></div></div></section>
+  </main>
+  <SiteFooter />
+</BaseLayout>
