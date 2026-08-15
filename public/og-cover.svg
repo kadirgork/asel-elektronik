@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0b1220"/>
+  <circle cx="1000" cy="-20" r="330" fill="none" stroke="#1f62f2" stroke-opacity=".35" stroke-width="2"/>
+  <circle cx="1000" cy="-20" r="255" fill="none" stroke="#5ed7f6" stroke-opacity=".25" stroke-width="2"/>
+  <path d="M0 530h1200" stroke="#d9ff42" stroke-opacity=".28" stroke-width="2"/>
+  <rect x="700" y="160" width="240" height="240" rx="54" fill="#d9ff42"/>
+  <text x="820" y="315" fill="#0b1220" font-family="Arial,sans-serif" font-size="82" font-weight="800" text-anchor="middle">AE</text>
+  <text x="88" y="235" fill="#d9ff42" font-family="Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="9">ASEL ELEKTRONİK</text>
+  <text x="88" y="335" fill="#fff" font-family="Arial,sans-serif" font-size="72" font-weight="800">Doğru ürün.</text>
+  <text x="88" y="425" fill="#5ed7f6" font-family="Arial,sans-serif" font-size="72" font-weight="800">Kesintisiz güç.</text>
+</svg>
