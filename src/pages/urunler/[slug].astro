@@ -30,11 +30,31 @@ const productSchema = {
   url: productUrl,
   brand: { "@type": "Brand", name: product.brand },
   category: product.category,
+  sku: product.catalogCode ?? product.slug,
+  mpn: product.catalogCode,
+  color: product.color ?? undefined,
+  additionalProperty: product.specs.map((spec) => ({
+    "@type": "PropertyValue",
+    name: spec.label,
+    value: spec.value,
+  })),
+};
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Ürünler", item: new URL("/urunler/", siteUrl).toString() },
+    { "@type": "ListItem", position: 2, name: category?.title ?? product.category, item: new URL(`/kategoriler/${product.categorySlug}/`, siteUrl).toString() },
+    { "@type": "ListItem", position: 3, name: product.title, item: productUrl },
+  ],
 };
 ---
 
 <BaseLayout title={`${product.title} | Asel Elektronik`} description={product.description}>
-  <Fragment slot="head"><script is:inline type="application/ld+json" set:html={JSON.stringify(productSchema)} /></Fragment>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
   <SiteHeader />
 
   <main id="main-content">
@@ -47,11 +67,16 @@ const productSchema = {
             <img src={product.image} alt={`${product.brand} ${product.title}`} width="900" height="900" fetchpriority="high" />
           </div>
           <div class="detail-copy">
-            <div class="product-meta"><span>{product.brand}</span><span>{product.category}</span></div>
+            <div class="product-meta"><span>{product.brand}</span><span>{product.catalogCode ?? product.category}</span></div>
             <h1>{product.title}</h1>
             <p class="detail-lead">{product.description}</p>
+            <div class="detail-facts">
+              {product.catalogCode && <span><small>Katalog kodu</small><strong>{product.catalogCode}</strong></span>}
+              {product.color && <span><small>Renk</small><strong>{product.color}</strong></span>}
+              {product.catalogPage && <span><small>Kaynak</small><strong>PDF s. {product.catalogPage}</strong></span>}
+            </div>
             <div class="detail-actions"><a class="button button--lime" href="/iletisim/">Teklif iste <span aria-hidden="true">↗</span></a><a class="button button--outline" href={`/kategoriler/${product.categorySlug}/`}>Kategoriyi gör</a></div>
-            <p class="detail-note"><span aria-hidden="true">ⓘ</span> Teknik değerler stok, model ve uygulama koşullarına göre teyit edilmelidir.</p>
+            <p class="detail-note"><span aria-hidden="true">ⓘ</span> Teknik değerler ve güncel fiyat, stok/model ve uygulama koşullarına göre teklif aşamasında teyit edilir.</p>
           </div>
         </div>
       </div>
@@ -62,7 +87,7 @@ const productSchema = {
         <div class="detail-main-column">
           <span class="eyebrow">Ürün detayları</span>
           <h2>İhtiyacını netleştir, doğru kararı ver.</h2>
-          <p class="detail-long-copy">{product.description} Bu ürünün kullanım alanı, teknik özellikleri ve uygulama koşulları için proje gereksinimlerini birlikte değerlendirebiliriz.</p>
+          <p class="detail-long-copy">{product.description} Bu ürünün kullanım alanı, teknik özellikleri ve uygulama koşulları için proje gereksinimlerini birlikte değerlendirebiliriz. Katalog kodunu teklif talebine ekleyerek doğru ölçü ve renk varyantı için daha hızlı dönüş alabilirsin.</p>
           <div class="feature-block"><h3>Öne çıkan özellikler</h3><ul class="feature-list">{product.features.map((feature) => <li>{feature}</li>)}</ul></div>
           <div class="feature-block"><h3>Kullanım alanları</h3><div class="use-case-list">{product.useCases.map((useCase) => <span>{useCase}</span>)}</div></div>
         </div>

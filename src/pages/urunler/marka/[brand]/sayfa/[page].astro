@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../../../components/Breadcrumbs.astro";
+import CatalogView from "../../../../../components/CatalogView.astro";
+import SiteFooter from "../../../../../components/SiteFooter.astro";
+import SiteHeader from "../../../../../components/SiteHeader.astro";
+import { brands, getBrandSlug, products } from "../../../../../data/products";
+
+export function getStaticPaths() {
+  const pageSize = 36;
+  return brands.flatMap((brand) => {
+    const brandProducts = products.filter((product) => product.brand === brand);
+    const totalPages = Math.ceil(brandProducts.length / pageSize);
+    return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => index + 2).map((page) => ({
+      params: { brand: getBrandSlug(brand), page: String(page) },
+      props: { brand, page },
+    }));
+  });
+}
+
+interface Props { brand: string; page: number; }
+const { brand, page } = Astro.props;
+const pageSize = 36;
+const brandProducts = products.filter((product) => product.brand === brand);
+const totalPages = Math.ceil(brandProducts.length / pageSize);
+const catalogProducts = brandProducts.slice((page - 1) * pageSize, page * pageSize);
+const brandSlug = getBrandSlug(brand);
+---
+
+<BaseLayout
+  title={`${brand} ürünleri · Sayfa ${page} | Asel Elektronik`}
+  description={`${brand} katalog ürünleri ${page}. sayfa: teknik kod, ölçü ve renk varyantlarını inceleyin.`}
+>
+  <SiteHeader />
+  <main id="main-content">
+    <section class="page-hero page-hero--dark">
+      <div class="container page-hero-grid">
+        <div>
+          <Breadcrumbs items={[{ label: "Ürünler", href: "/urunler/" }, { label: brand, href: `/urunler/marka/${brandSlug}/` }, { label: `Sayfa ${page}` }]} />
+          <span class="eyebrow">Marka kataloğu</span>
+          <h1>{brand}<br /><em>sayfa {page}.</em></h1>
+          <p>Markanın katalog kodu, ölçü ve renk varyantlarını teknik detay sayfalarıyla inceleyin.</p>
+        </div>
+        <div class="page-hero-stat"><strong>{catalogProducts.length}</strong><span>ürün<br />bu sayfada</span></div>
+      </div>
+    </section>
+    <section class="section section--white catalog-section">
+      <div class="container">
+        <div class="catalog-toolbar"><div><span class="eyebrow">{brand}</span><h2>Teknik ürünler</h2></div><p>Ürün detayında katalog kodunu, görseli ve teklif için gerekli teknik özeti bulabilirsin.</p></div>
+        <CatalogView catalogProducts={catalogProducts} totalCount={brandProducts.length} currentPage={page} totalPages={totalPages} activeBrand={brand} paginationBase={`/urunler/marka/${brandSlug}`} />
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

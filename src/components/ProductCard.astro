@@ -9,7 +9,7 @@ interface Props {
 const { product, eager = false } = Astro.props;
 ---
 
-<article class="product-card">
+<article class="product-card" data-product-card data-brand={product.brand} data-category={product.categorySlug} data-search={`${product.title} ${product.catalogCode ?? ""} ${product.color ?? ""}`}>
   <a class="product-image" href={`/urunler/${product.slug}/`} aria-label={`${product.title} detayını incele`}>
     <span class="product-tag">{product.category}</span>
     <img
@@ -22,9 +22,10 @@ const { product, eager = false } = Astro.props;
     />
   </a>
   <div class="product-copy">
-    <div class="product-meta"><span>{product.brand}</span><span>{product.category}</span></div>
+    <div class="product-meta"><span>{product.brand}</span><span>{product.catalogCode ?? product.category}</span></div>
     <h3><a href={`/urunler/${product.slug}/`}>{product.title}</a></h3>
     <p>{product.highlight}</p>
+    {product.color && <span class="product-variant">Renk: {product.color}</span>}
     <a class="product-link" href={`/urunler/${product.slug}/`}>Ürün detayını incele <span aria-hidden="true">→</span></a>
   </div>
 </article>

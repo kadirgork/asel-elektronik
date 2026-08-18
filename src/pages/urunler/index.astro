@@ -1,17 +1,20 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import ProductCard from "../../components/ProductCard.astro";
+import CatalogView from "../../components/CatalogView.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
-import { categories } from "../../data/catalog";
 import { products } from "../../data/products";
 
+const pageSize = 36;
+const catalogProducts = products.slice(0, pageSize);
+const totalPages = Math.ceil(products.length / pageSize);
 const itemListData = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "Asel Elektronik ürün kataloğu",
-  itemListElement: products.map((product, index) => ({
+  numberOfItems: products.length,
+  itemListElement: catalogProducts.map((product, index) => ({
     "@type": "ListItem",
     position: index + 1,
     url: new URL(`/urunler/${product.slug}/`, Astro.site ?? "https://www.asel-elektronik.com").toString(),
@@ -27,7 +30,7 @@ const itemListData = {
 
 <BaseLayout
   title="Ürünler | Asel Elektronik"
-  description="Asel Elektronik ürün kataloğu: aydınlatma, anahtar-priz, kablolama, güvenlik, otomasyon ve güç ürünlerini inceleyin."
+  description="Asel Elektronik ürün kataloğu: Mega Teknik, bimed, bimed A1Ex, iPEK ve mega kablo koruma, boru, rakor ve tesisat ürünlerini marka ve kategoriye göre inceleyin."
 >
   <Fragment slot="head"><script is:inline type="application/ld+json" set:html={JSON.stringify(itemListData)} /></Fragment>
   <SiteHeader />
@@ -39,28 +42,19 @@ const itemListData = {
           <Breadcrumbs items={[{ label: "Ürünler" }]} />
           <span class="eyebrow">Ürün kataloğu</span>
           <h1>İhtiyacın için<br /><em>doğru ürün.</em></h1>
-          <p>Ürünleri kategoriye göre keşfet, teknik detayları incele ve projen için teklif iste.</p>
+          <p>Ürünleri marka ve kategoriye göre keşfet, katalog kodunu ve teknik detayları incele, projen için teklif iste.</p>
         </div>
-        <div class="page-hero-stat"><strong>{products.length}</strong><span>seçili ürün<br />detay sayfası</span></div>
+        <div class="page-hero-stat"><strong>{products.length}</strong><span>katalog ürünü<br />detay sayfası</span></div>
       </div>
     </section>
 
     <section class="section section--white catalog-section">
       <div class="container">
         <div class="catalog-toolbar">
-          <div><span class="eyebrow">Kategori seç</span><h2>Ürün grupları</h2></div>
-          <p>Aradığın ürüne kategori üzerinden daha hızlı ulaş.</p>
+          <div><span class="eyebrow">Katalog</span><h2>Ürün grupları</h2></div>
+          <p>İlk sayfadan hızlıca başla; marka filtresi ve sayfalama ile katalogdaki tüm teknik seçeneklere ulaş.</p>
         </div>
-        <div class="category-filter" aria-label="Ürün kategorileri">
-          <a class="category-filter-link is-active" href="/urunler/">Tümü <span>{products.length}</span></a>
-          {categories.filter((category) => products.some((product) => product.categorySlug === category.slug)).map((category) => (
-            <a class="category-filter-link" href={`/kategoriler/${category.slug}/`}>{category.title}<span>{products.filter((product) => product.categorySlug === category.slug).length}</span></a>
-          ))}
-        </div>
-
-        <div class="product-grid product-grid--catalog">
-          {products.map((product, index) => <ProductCard product={product} eager={index < 4} />)}
-        </div>
+        <CatalogView catalogProducts={catalogProducts} totalCount={products.length} totalPages={totalPages} />
       </div>
     </section>
 

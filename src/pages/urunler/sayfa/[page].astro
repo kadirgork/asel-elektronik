@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import CatalogView from "../../../components/CatalogView.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import { products } from "../../../data/products";
+
+const pageSize = 36;
+export function getStaticPaths() {
+  const pageSize = 36;
+  const totalPages = Math.ceil(products.length / pageSize);
+  return Array.from({ length: totalPages - 1 }, (_, index) => index + 2).map((page) => ({
+    params: { page: String(page) },
+    props: { page },
+  }));
+}
+
+const totalPages = Math.ceil(products.length / pageSize);
+
+interface Props { page: number; }
+const { page } = Astro.props;
+const catalogProducts = products.slice((page - 1) * pageSize, page * pageSize);
+---
+
+<BaseLayout
+  title={`Ürünler · Sayfa ${page} | Asel Elektronik`}
+  description={`Asel Elektronik ürün kataloğu ${page}. sayfa: kablo koruma, boru, rakor, buat ve tesisat ürünleri.`}
+>
+  <SiteHeader />
+  <main id="main-content">
+    <section class="page-hero page-hero--dark">
+      <div class="container page-hero-grid">
+        <div>
+          <Breadcrumbs items={[{ label: "Ürünler", href: "/urunler/" }, { label: `Sayfa ${page}` }]} />
+          <span class="eyebrow">Ürün kataloğu</span>
+          <h1>Katalog<br /><em>sayfa {page}.</em></h1>
+          <p>Marka ve kategori görünümünü kullanarak teknik ürün seçeneklerini inceleyebilirsin.</p>
+        </div>
+        <div class="page-hero-stat"><strong>{catalogProducts.length}</strong><span>ürün<br />bu sayfada</span></div>
+      </div>
+    </section>
+    <section class="section section--white catalog-section">
+      <div class="container">
+        <div class="catalog-toolbar"><div><span class="eyebrow">Katalog</span><h2>Ürün seçenekleri</h2></div><p>Her ürünün ayrı teknik detay ve teklif talebi sayfası bulunur.</p></div>
+        <CatalogView catalogProducts={catalogProducts} totalCount={products.length} currentPage={page} totalPages={totalPages} />
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

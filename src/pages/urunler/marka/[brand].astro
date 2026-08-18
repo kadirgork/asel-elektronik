@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import CatalogView from "../../../components/CatalogView.astro";
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import { brands, getBrandSlug, products } from "../../../data/products";
+
+export function getStaticPaths() {
+  return brands.map((brand) => ({ params: { brand: getBrandSlug(brand) }, props: { brand } }));
+}
+
+interface Props { brand: string; }
+const { brand } = Astro.props;
+const brandProducts = products.filter((product) => product.brand === brand);
+const pageSize = 36;
+const totalPages = Math.ceil(brandProducts.length / pageSize);
+const brandSlug = getBrandSlug(brand);
+const catalogProducts = brandProducts.slice(0, pageSize);
+---
+
+<BaseLayout
+  title={`${brand} ürünleri | Asel Elektronik`}
+  description={`${brand} katalog ürünleri: teknik kod, ölçü ve renk varyantlarını Asel Elektronik ürün detay sayfalarında inceleyin.`}
+>
+  <SiteHeader />
+  <main id="main-content">
+    <section class="page-hero page-hero--dark">
+      <div class="container page-hero-grid">
+        <div>
+          <Breadcrumbs items={[{ label: "Ürünler", href: "/urunler/" }, { label: brand }]} />
+          <span class="eyebrow">Marka kataloğu</span>
+          <h1>{brand}<br /><em>ürünleri.</em></h1>
+          <p>{brand} ürün grubunu katalog kodu, ölçü ve renk varyantlarıyla inceleyin.</p>
+        </div>
+        <div class="page-hero-stat"><strong>{brandProducts.length}</strong><span>ürün<br />varyantı</span></div>
+      </div>
+    </section>
+    <section class="section section--white catalog-section">
+      <div class="container">
+        <div class="catalog-toolbar"><div><span class="eyebrow">{brand}</span><h2>Teknik ürünler</h2></div><p>Ürün detayında katalog kodunu, görseli ve teklif için gerekli teknik özeti bulabilirsin.</p></div>
+        <CatalogView catalogProducts={catalogProducts} totalCount={brandProducts.length} totalPages={totalPages} activeBrand={brand} paginationBase={`/urunler/marka/${brandSlug}`} />
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

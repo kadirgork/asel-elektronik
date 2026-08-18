@@ -1,0 +1,91 @@
+---
+import ProductCard from "./ProductCard.astro";
+import { categories } from "../data/catalog";
+import { brands, products, type Product } from "../data/products";
+
+interface Props {
+  catalogProducts: Product[];
+  totalCount: number;
+  currentPage?: number;
+  totalPages?: number;
+  activeBrand?: string;
+  paginationBase?: string;
+}
+
+const {
+  catalogProducts,
+  totalCount,
+  currentPage = 1,
+  totalPages = 1,
+  activeBrand = "",
+  paginationBase = "/urunler",
+} = Astro.props;
+
+const pageUrl = (page: number) => page <= 1 ? `${paginationBase}/` : `${paginationBase}/sayfa/${page}/`;
+const brandUrl = (brand: string) => `/urunler/marka/${brand.toLocaleLowerCase("tr-TR").replaceAll("ı", "i").replaceAll("ğ", "g").replaceAll("ü", "u").replaceAll("ş", "s").replaceAll("ö", "o").replaceAll("ç", "c").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}/`;
+---
+
+<div class="catalog-controls" data-catalog-controls>
+  <label class="catalog-search">
+    <span class="sr-only">Bu sayfada ürün ara</span>
+    <input type="search" placeholder="Bu sayfada ürün veya katalog kodu ara" autocomplete="off" data-catalog-search />
+  </label>
+  <label class="catalog-select">
+    <span>Marka</span>
+    <select data-catalog-brand>
+      <option value="/urunler/" selected={!activeBrand}>Tüm markalar</option>
+      {brands.map((brand) => <option value={brandUrl(brand)} selected={activeBrand === brand}>{brand}</option>)}
+    </select>
+  </label>
+  <p class="catalog-result" aria-live="polite" data-catalog-result>{catalogProducts.length} ürün gösteriliyor</p>
+</div>
+
+<div class="category-filter" aria-label="Ürün kategorileri">
+  <a class="category-filter-link is-active" href="/urunler/">Tümü <span>{totalCount}</span></a>
+  {categories.filter((category) => products.some((product) => product.categorySlug === category.slug)).map((category) => (
+    <a class="category-filter-link" href={`/kategoriler/${category.slug}/`}>{category.title}<span>{products.filter((product) => product.categorySlug === category.slug).length}</span></a>
+  ))}
+</div>
+
+<div class="product-grid product-grid--catalog">
+  {catalogProducts.map((product, index) => <ProductCard product={product} eager={index < 2} />)}
+</div>
+
+<p class="catalog-empty" data-catalog-empty hidden>Aramana uyan ürün bu sayfada bulunamadı. Katalog sayfalarını veya marka görünümünü inceleyebilirsin.</p>
+
+{totalPages > 1 && (
+  <nav class="catalog-pagination" aria-label="Ürün katalog sayfaları">
+    {currentPage > 1 && <a class="pagination-link" href={pageUrl(currentPage - 1)}>← Önceki</a>}
+    <div class="pagination-pages">
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+        <a class:list={['pagination-page', { 'is-active': page === currentPage }]} href={pageUrl(page)} aria-current={page === currentPage ? "page" : undefined}>{page}</a>
+      ))}
+    </div>
+    {currentPage < totalPages && <a class="pagination-link" href={pageUrl(currentPage + 1)}>Sonraki →</a>}
+  </nav>
+)}
+
+<script is:inline>
+  const catalogCards = [...document.querySelectorAll('[data-product-card]')];
+  const catalogSearch = document.querySelector('[data-catalog-search]');
+  const catalogBrand = document.querySelector('[data-catalog-brand]');
+  const catalogResult = document.querySelector('[data-catalog-result]');
+  const catalogEmpty = document.querySelector('[data-catalog-empty]');
+  const updateCatalog = () => {
+    const query = (catalogSearch?.value || '').trim().toLocaleLowerCase('tr-TR');
+    let visible = 0;
+    catalogCards.forEach((card) => {
+      const haystack = (card.dataset.search || '').toLocaleLowerCase('tr-TR');
+      const matches = !query || haystack.includes(query);
+      card.hidden = !matches;
+      if (matches) visible += 1;
+    });
+    if (catalogResult) catalogResult.textContent = `${visible} ürün gösteriliyor`;
+    if (catalogEmpty) catalogEmpty.hidden = visible !== 0;
+  };
+  catalogSearch?.addEventListener('input', updateCatalog);
+  catalogBrand?.addEventListener('change', (event) => {
+    const target = event.currentTarget;
+    if (target instanceof HTMLSelectElement && target.value) window.location.href = target.value;
+  });
+</script>

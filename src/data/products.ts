@@ -1,3 +1,5 @@
+import { megaProducts } from "./megaProducts";
+
 export type ProductSpec = {
   label: string;
   value: string;
@@ -16,9 +18,14 @@ export type Product = {
   specs: ProductSpec[];
   features: string[];
   useCases: string[];
+  catalogCode?: string;
+  catalogPage?: number;
+  catalogSection?: string;
+  color?: string | null;
+  sourcePrice?: string | null;
 };
 
-export const products: Product[] = [
+const legacyProducts: Product[] = [
   {
     slug: "tuncmatik-22kw-pico-charger",
     brand: "Tunçmatik",
@@ -221,6 +228,27 @@ export const products: Product[] = [
     useCases: ["Balkon ve teraslar", "Kafe ve restoran alanları", "Atölye ve çalışma alanları"],
   },
 ];
+
+export const products: Product[] = [...legacyProducts, ...megaProducts];
+
+export const brands = [...new Set(products.map((product) => product.brand))].sort((a, b) => a.localeCompare(b, "tr"));
+
+export function getBrandSlug(brand: string) {
+  return brand
+    .toLocaleLowerCase("tr-TR")
+    .replaceAll("ı", "i")
+    .replaceAll("ğ", "g")
+    .replaceAll("ü", "u")
+    .replaceAll("ş", "s")
+    .replaceAll("ö", "o")
+    .replaceAll("ç", "c")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function getBrand(slug: string) {
+  return brands.find((brand) => getBrandSlug(brand) === slug);
+}
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
