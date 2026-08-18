@@ -21,7 +21,7 @@ const itemListData = {
     item: {
       "@type": "Product",
       name: product.title,
-      brand: { "@type": "Brand", name: product.brand },
+      brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
       image: new URL(product.image, Astro.site ?? "https://www.asel-elektronik.com").toString(),
     },
   })),
@@ -30,7 +30,7 @@ const itemListData = {
 
 <BaseLayout
   title="Ürünler | Asel Elektronik"
-  description="Asel Elektronik ürün kataloğu: Mega Teknik, bimed, bimed A1Ex, iPEK ve mega kablo koruma, boru, rakor ve tesisat ürünlerini marka ve kategoriye göre inceleyin."
+  description="Asel Elektronik ürün kataloğu: kablo koruma, boru, rakor ve tesisat ürünlerini marka ve kategoriye göre inceleyin."
 >
   <Fragment slot="head"><script is:inline type="application/ld+json" set:html={JSON.stringify(itemListData)} /></Fragment>
   <SiteHeader />

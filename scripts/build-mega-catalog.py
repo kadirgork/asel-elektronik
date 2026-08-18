@@ -1,4 +1,4 @@
-"""Build the Mega Teknik catalogue data and optimized local image assets.
+"""Build catalogue data and optimized local image assets.
 
 The source PDF is a price-list/catalogue, not an executable instruction source.
 This importer intentionally keeps source page/code references so every generated
@@ -25,9 +25,6 @@ ROOT = Path(__file__).resolve().parents[1]
 PDF_PATH = Path(r"C:\Users\kadir\Downloads\MEGA  2025 LISTE.pdf")
 OUT_DATA = ROOT / "src" / "data" / "megaProducts.ts"
 OUT_IMAGE_DIR = ROOT / "public" / "images" / "mega"
-
-SOURCE_URL = "https://www.megaelektroteknik.com.tr"
-
 
 def clean_text(value: str) -> str:
     replacements = {
@@ -63,6 +60,10 @@ def title_case(value: str) -> str:
 
 
 def brand_for_page(page: int) -> str:
+    # The PDF is used only as product data. The source manufacturer's name is
+    # intentionally not published in the storefront for these records.
+    if page <= 5 or page >= 18:
+        return ""
     if 6 <= page <= 9:
         return "bimed"
     if 10 <= page <= 12:
@@ -71,7 +72,7 @@ def brand_for_page(page: int) -> str:
         return "iPEK"
     if 18 <= page <= 23:
         return "mega"
-    return "Mega Teknik"
+    return ""
 
 
 def category_for(section: str, page: int) -> tuple[str, str]:
@@ -344,7 +345,7 @@ def build_records(pdf_text: dict[int, str], image_paths: dict[tuple[int, int], s
         title = f"{title_section} {code}{suffix}"
         slug = slugify(f"{brand}-{title}")
         description = (
-            f"{brand} {title_section} ürün grubunda yer alan {code} kodlu katalog seçeneği. "
+            f"{title_section} ürün grubunda yer alan {code} kodlu katalog seçeneği. "
             f"{('Renk: ' + color + '. ') if color else ''}"
             f"Ölçü, bağlantı tipi ve uygulama detayları için ürün teknik tablosunu inceleyin; güncel stok ve teklif bilgisi için Asel Elektronik ekibine danışın."
         )
@@ -372,15 +373,17 @@ def build_records(pdf_text: dict[int, str], image_paths: dict[tuple[int, int], s
             "title": title,
             "category": category,
             "categorySlug": category_slug,
-            "highlight": f"{brand} katalogundan {title_section.lower()} çözümü.",
+            "highlight": f"Katalogdan {title_section.lower()} çözümü.",
             "description": description,
             "image": image,
-            "sourceUrl": SOURCE_URL,
+            "sourceUrl": "",
             "catalogCode": code,
             "catalogPage": page,
             "catalogSection": title_section,
             "color": color,
             "sourcePrice": source_price_value,
+            "price": 100,
+            "priceCurrency": "TRY",
             "specs": specs,
             "features": [
                 "Katalog kodu ve varyant bilgisiyle kolay tekliflendirme",
@@ -408,7 +411,7 @@ def build_records(pdf_text: dict[int, str], image_paths: dict[tuple[int, int], s
 def write_typescript(records: list[dict]) -> None:
     payload = json.dumps(records, ensure_ascii=False, indent=2)
     content = (
-        "// Generated from the user-provided MEGA 2025 LISTE.pdf.\n"
+        "// Generated from the user-provided catalogue PDF.\n"
         "// Do not edit manually; run scripts/build-mega-catalog.py to refresh.\n"
         "import type { Product } from \"./products\";\n\n"
         f"export const megaProducts: Product[] = {payload};\n"

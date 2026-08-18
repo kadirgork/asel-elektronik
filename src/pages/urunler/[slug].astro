@@ -28,8 +28,14 @@ const productSchema = {
   description: product.description,
   image: new URL(product.image, siteUrl).toString(),
   url: productUrl,
-  brand: { "@type": "Brand", name: product.brand },
+  brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
   category: product.category,
+  offers: product.price ? {
+    "@type": "Offer",
+    price: product.price,
+    priceCurrency: product.priceCurrency ?? "TRY",
+    url: productUrl,
+  } : undefined,
   sku: product.catalogCode ?? product.slug,
   mpn: product.catalogCode,
   color: product.color ?? undefined,
@@ -64,10 +70,10 @@ const breadcrumbSchema = {
         <div class="detail-layout">
           <div class="detail-media">
             <span class="product-tag">{product.category}</span>
-            <img src={product.image} alt={`${product.brand} ${product.title}`} width="900" height="900" fetchpriority="high" />
+            <img src={product.image} alt={`${product.brand ? `${product.brand} ` : ""}${product.title}`} width="900" height="900" fetchpriority="high" />
           </div>
           <div class="detail-copy">
-            <div class="product-meta"><span>{product.brand}</span><span>{product.catalogCode ?? product.category}</span></div>
+            <div class="product-meta"><span>{product.brand || "Katalog ürünü"}</span><span>{product.catalogCode ?? product.category}</span></div>
             <h1>{product.title}</h1>
             <p class="detail-lead">{product.description}</p>
             <div class="detail-facts">
@@ -75,6 +81,7 @@ const breadcrumbSchema = {
               {product.color && <span><small>Renk</small><strong>{product.color}</strong></span>}
               {product.catalogPage && <span><small>Kaynak</small><strong>PDF s. {product.catalogPage}</strong></span>}
             </div>
+            <div class="detail-price"><span>Geçici katalog fiyatı</span><strong>{product.price ? `${product.price} TL` : "Teklif al"}</strong></div>
             <div class="detail-actions"><a class="button button--lime" href="/iletisim/">Teklif iste <span aria-hidden="true">↗</span></a><a class="button button--outline" href={`/kategoriler/${product.categorySlug}/`}>Kategoriyi gör</a></div>
             <p class="detail-note"><span aria-hidden="true">ⓘ</span> Teknik değerler ve güncel fiyat, stok/model ve uygulama koşullarına göre teklif aşamasında teyit edilir.</p>
           </div>

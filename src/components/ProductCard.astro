@@ -14,7 +14,7 @@ const { product, eager = false } = Astro.props;
     <span class="product-tag">{product.category}</span>
     <img
       src={product.image}
-      alt={`${product.brand} ${product.title}`}
+      alt={`${product.brand ? `${product.brand} ` : ""}${product.title}`}
       width="640"
       height="640"
       loading={eager ? "eager" : "lazy"}
@@ -22,10 +22,11 @@ const { product, eager = false } = Astro.props;
     />
   </a>
   <div class="product-copy">
-    <div class="product-meta"><span>{product.brand}</span><span>{product.catalogCode ?? product.category}</span></div>
+    <div class="product-meta"><span>{product.brand || "Ürün"}</span><span>{product.catalogCode ?? product.category}</span></div>
     <h3><a href={`/urunler/${product.slug}/`}>{product.title}</a></h3>
     <p>{product.highlight}</p>
     {product.color && <span class="product-variant">Renk: {product.color}</span>}
+    <div class="product-price"><span>Geçici katalog fiyatı</span><strong>{product.price ? `${product.price} TL` : "Teklif al"}</strong></div>
     <a class="product-link" href={`/urunler/${product.slug}/`}>Ürün detayını incele <span aria-hidden="true">→</span></a>
   </div>
 </article>

@@ -23,6 +23,8 @@ export type Product = {
   catalogSection?: string;
   color?: string | null;
   sourcePrice?: string | null;
+  price?: number;
+  priceCurrency?: string;
 };
 
 const legacyProducts: Product[] = [
@@ -231,7 +233,7 @@ const legacyProducts: Product[] = [
 
 export const products: Product[] = [...legacyProducts, ...megaProducts];
 
-export const brands = [...new Set(products.map((product) => product.brand))].sort((a, b) => a.localeCompare(b, "tr"));
+export const brands = [...new Set(products.map((product) => product.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b, "tr"));
 
 export function getBrandSlug(brand: string) {
   return brand
